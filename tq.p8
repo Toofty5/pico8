@@ -8,8 +8,6 @@ function _init()
 	startmx=24
 	startmy=22
 	
-	_update=update_map()
-	_draw=draw_map()
 	
 	m_width= 4*16
 	m_height= 4*16
@@ -29,42 +27,12 @@ function _init()
 		mp=10,
 		gold=0
 	}
-	
+	_update=update_map
+	_draw=draw_map
 end
-
 
 -->8
 --overworld map
-function _update()
-	if state == 0 then
-		update_map() end
-	if state == 1 then
-		update_fight() end	
-	if state == 2 then
-		update_math() end
-end
-
-function _draw()
-	if state == 0 then
-		draw_map() end
-	if state == 1 then
-		draw_fight() end
-	
-	if state != new_state then
-		wipe_out()
-		if wipe_t == 0 then
-			prev_state = state
-			state = new_state
-		end
-	end
-		
-	if prev_state != state then
-		wipe_in()
-		if wipe_t == 0 then
-			prev_state = state
-		end
-	end		
-end
 
 function update_map()
 	update_tristan()
@@ -79,7 +47,6 @@ function update_map()
 		move_tristan(3) end
 	if btnp(❎) then	
 		init_fight() end
-
 end
 	
 function draw_map()
@@ -93,6 +60,21 @@ function draw_map()
 	draw_tristan()
 
 	map(mapx, mapy, 0, 0, 128, 32, 0x80)
+
+	if state != new_state then
+		wipe_out()
+		if wipe_t == 0 then
+			prev_state = state
+			state = new_state
+		end
+	end
+		
+	if prev_state != state then
+		wipe_in()
+		if wipe_t == 0 then
+			prev_state = state
+		end
+	end
 end
 
 
@@ -186,14 +168,12 @@ end
 -->8
 --fight!
 function init_fight()
-	_update=update_fight()
-	_draw=draw_fight()
 
 	tomato={hp=10,mp=10,spr=128}
 	hw={hp=8,mp=20,spr=136}
 	enemy=hw
 	new_state=1
-	fight_state=0
+	fight_state="main"
 	t=0
 	sel=0
 	
@@ -206,12 +186,24 @@ function init_fight()
 			"",
 			"   math",
 			"   reading",
-			"   science"}
+			"   science"},
+		choice=true
 	}		
 	ui_hw_math={
 		x1=2,y1=91,x2=126,y2=126,
 		text={"math!"}
 	}
+	_update=update_fight
+	_draw=draw_fight
+end
+
+function update_fight()
+	if fight_state=="main" then
+		fight_ui={ui_hw_main}
+		chooser() //coroutine this
+	end
+
+	t+=1
 end
 
 function draw_fight()
@@ -221,17 +213,14 @@ function draw_fight()
 		draw_ui(obj)
 	end	
 
-	if choosing then
-		print("★",5,99+sel*6,
-		(flr(t/10)%2)*10)
-	end
 end
 
 
 function draw_enemy()
-	e.x=80
-	e.y=36
-	spr(e.spr+4*(flr(t/15)%2),e.x,e.y,4,4)
+	enemy.x=80
+	enemy.y=36
+	spr(enemy.spr+4*(flr(t/15)%2),
+		enemy.x,enemy.y,4,4)
 end
 
 function draw_ui(obj)
@@ -245,7 +234,17 @@ function draw_ui(obj)
 	for s in all(obj.text) do
 		print(s)
 	end
+	
+	if obj.choice then 
+		print("★",5,99+sel*6,
+		(flr(t/10)%2)*10)
+	end
+
 end
+
+function update_ui()
+end
+
 -->8
 --helper functions
 
