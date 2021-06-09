@@ -200,7 +200,8 @@ end
 function update_fight()
 	if fight_state=="main" then
 		fight_ui={ui_hw_main}
-		chooser() //coroutine this
+		
+		
 	end
 
 	t+=1
@@ -211,6 +212,7 @@ function draw_fight()
 	draw_enemy()
 	for obj in all(fight_ui) do
 		draw_ui(obj)
+		chooser()
 	end	
 
 end
@@ -245,6 +247,16 @@ end
 function update_ui()
 end
 
+function chooser()
+	if btnp(⬆️) and sel > 0 then
+		sel-=1 end
+	if btnp(⬇️) and sel < 3 then
+		sel+=1 end
+	if btnp(❎) then
+		choice=sel
+		sel=0
+	end
+end
 -->8
 --helper functions
 
