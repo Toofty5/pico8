@@ -8,6 +8,9 @@ function _init()
 	startmx=24
 	startmy=22
 	
+	_update=update_map()
+	_draw=draw_map()
+	
 	m_width= 4*16
 	m_height= 4*16
 
@@ -26,6 +29,7 @@ function _init()
 		mp=10,
 		gold=0
 	}
+	
 end
 
 
@@ -182,11 +186,14 @@ end
 -->8
 --fight!
 function init_fight()
+	_update=update_fight()
+	_draw=draw_fight()
+
 	tomato={hp=10,mp=10,spr=128}
 	hw={hp=8,mp=20,spr=136}
-	e=hw
+	enemy=hw
 	new_state=1
-	f_state=0
+	fight_state=0
 	t=0
 	sel=0
 	
@@ -205,8 +212,6 @@ function init_fight()
 		x1=2,y1=91,x2=126,y2=126,
 		text={"math!"}
 	}
-	
-	
 end
 
 function draw_fight()
@@ -222,51 +227,11 @@ function draw_fight()
 	end
 end
 
-function update_fight()
-	printh(f_state)
-	--main
-	if f_state==0 then
-		fight_ui={ui_hw_main} 
-	
-		choice = 0
-		chooser()
-		if choice !=0 then
-			f_state=choice 
-		end
-	end
-	--math
-	if f_state==1 then
-		fight_ui={ui_hw_math}
-	end
-	
-	t+=1
-end
 
 function draw_enemy()
 	e.x=80
 	e.y=36
 	spr(e.spr+4*(flr(t/15)%2),e.x,e.y,4,4)
-end
-
-
-function update_math()
-		math_a = flr(rnd(20))
-		math_b = flr(rnd(20))
-end
-
-function chooser()
-	choosing = true
-	if btnp(❎) then
-		choice = sel 
-		sel=0
-	end
-	
-	if btnp(3) and sel < 2 then 
-		sel+=1
-	end
-	if btnp(2) and sel > 0 then
-		sel-=1
-	end
 end
 
 function draw_ui(obj)
