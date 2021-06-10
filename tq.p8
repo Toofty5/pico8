@@ -211,30 +211,41 @@ end
 function init_math()
 	num_a=flr(rnd(19)+1)
 	num_b=flr(rnd(19)+1)
-	if num_a<num_b then
-		num_c=num_b
-		num_b=num_a
-		num_a=num_c
+	op=flr(rnd(2))-1 //0 minus
+	
+	if op==0 then
+		if num_a<num_b then
+			num_c=num_b
+			num_b=num_a
+			num_a=num_c
+		end
+		answer=num_a-num_b
+		op_s=" - "
+	else
+		answer=num_a+num_b
+		op_s=" + "
 	end
 
 	ui_hw_math={
 		x1=2,y1=84,x2=126,y2=126,
 		text={"what is "..num_a..
-		" + "..num_b.."?",""},
+		op_s..num_b.."?",""},
 		choice=true
 	}
 	
 	choices={}
 	for i=1,4 do
-		add(choices,flr(rnd(2*math_max)))
+		this_num=answer
+		while this_num==answer do
+			this_num = flr(rnd(2*math_max))
+		end
+		add(choices,this_num)
 	end
-	choices[flr(rnd(4))+1] = num_a+num_b
+	choices[flr(rnd(4))+1] = answer
 
 	for x in all(choices) do
 		add(ui_hw_math.text,"   "..x)
 	end
-	
-	
 	_update=update_math
 end
 
@@ -243,6 +254,11 @@ function update_math()
 	
 	choice=-1
 	chooser()
+	if choice != -1 then
+		if choices[choice+1]==answer then
+			_update=update_fight
+		else	_update=update_fight end
+	end
 	
 	t+=1
 end
@@ -293,6 +309,13 @@ function chooser()
 		sel=0
 	end
 end
+
+function hit(dmg)
+	enemy.hp -= dmg
+	hit_t=10
+end
+
+
 -->8
 --helper functions
 
