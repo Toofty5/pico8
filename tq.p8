@@ -7,6 +7,7 @@ function _init()
 	prev_state=0
 	startmx=24
 	startmy=22
+	math_max=20
 	
 	
 	m_width= 4*16
@@ -180,7 +181,7 @@ function init_fight()
 	fight_ui={}
 		
 	ui_hw_main={
-		x1=2,y1=91,x2=126,y2=126,
+		x1=2,y1=84,x2=126,y2=126,
 		text={
 			"choose a skill!",
 			"",
@@ -189,10 +190,6 @@ function init_fight()
 			"   science"},
 		choice=true
 	}		
-	ui_hw_math={
-		x1=2,y1=91,x2=126,y2=126,
-		text={"math!"}
-	}
 	_update=update_fight
 	_draw=draw_fight
 end
@@ -200,10 +197,53 @@ end
 function update_fight()
 	if fight_state=="main" then
 		fight_ui={ui_hw_main}
-		
-		
+		choice=-1
+		chooser()
+		if choice==0 then
+			init_math()
+		end
+	end
+	
+	t+=1
+end
+
+
+function init_math()
+	num_a=flr(rnd(19)+1)
+	num_b=flr(rnd(19)+1)
+	if num_a<num_b then
+		num_c=num_b
+		num_b=num_a
+		num_a=num_c
 	end
 
+	ui_hw_math={
+		x1=2,y1=84,x2=126,y2=126,
+		text={"what is "..num_a..
+		" + "..num_b.."?",""},
+		choice=true
+	}
+	
+	choices={}
+	for i=1,4 do
+		add(choices,flr(rnd(2*math_max)))
+	end
+	choices[flr(rnd(4))+1] = num_a+num_b
+
+	for x in all(choices) do
+		add(ui_hw_math.text,"   "..x)
+	end
+	
+	
+	_update=update_math
+end
+
+function update_math()
+	fight_ui={ui_hw_math}
+	
+	choice=-1
+	chooser()
+	
 	t+=1
 end
 
@@ -212,9 +252,7 @@ function draw_fight()
 	draw_enemy()
 	for obj in all(fight_ui) do
 		draw_ui(obj)
-		chooser()
 	end	
-
 end
 
 
@@ -236,16 +274,14 @@ function draw_ui(obj)
 	for s in all(obj.text) do
 		print(s)
 	end
-	
+		
 	if obj.choice then 
-		print("★",5,99+sel*6,
+		print("★",5,98+sel*6,
 		(flr(t/10)%2)*10)
 	end
 
 end
 
-function update_ui()
-end
 
 function chooser()
 	if btnp(⬆️) and sel > 0 then
