@@ -19,7 +19,7 @@ end
 
 function _draw()
 	cls()
-//	test()
+	test()
 	
 	for thing in all(things) do
 		local x=thing.x
@@ -127,23 +127,23 @@ function spawn(num)
 	end
 end
 
-function sqr(x,y,size,r,col)
-	local r0=r
-	local r1=r+0.25
-	local r2=r+0.5
-	local r3=r+0.75
-	x1=x+size*cos(r0)
-	y1=y+size*sin(r0)
-	x2=x+size*cos(r1)
-	y2=y+size*sin(r1)
-	x3=x+size*cos(r2)
-	y3=y+size*sin(r2)
-	x4=x+size*cos(r3)
-	y4=y+size*sin(r3)
-	line(x1,y1,x2,y2,col)
-	line(x2,y2,x3,y3,col)
-	line(x3,y3,x4,y4,col)
-	line(x4,y4,x1,y1,col)
+
+function polyfill(x,y,sides,size,r,col)
+	local rot={} //vertex rotations
+	for i=0,sides do
+		add(rot,r+i/sides)
+	end
+
+	verts={} //vertex coords
+	for r in all(rot) do
+		local x1=x+size*cos(r)
+		local y1=y+size*sin(r)
+		local x2=x+size*cos(r+1/sides)
+		local y2=y+size*sin(r+1/sides)
+
+		trifill({x,y,x1,y1,x2,y2},col)
+	end
+	
 end
 
 function sqrfill(x,y,size,r,col)
@@ -163,6 +163,26 @@ function sqrfill(x,y,size,r,col)
 	trifill({x1,y1,x2,y2,x3,y3},col)
  trifill({x3,y3,x4,y4,x1,y1},col)
 end	
+function sqr(x,y,size,r,col)
+	local r0=r
+	local r1=r+0.25
+	local r2=r+0.5
+	local r3=r+0.75
+	x1=x+size*cos(r0)
+	y1=y+size*sin(r0)
+	x2=x+size*cos(r1)
+	y2=y+size*sin(r1)
+	x3=x+size*cos(r2)
+	y3=y+size*sin(r2)
+	x4=x+size*cos(r3)
+	y4=y+size*sin(r3)
+	line(x1,y1,x2,y2,col)
+	line(x2,y2,x3,y3,col)
+	line(x3,y3,x4,y4,col)
+	line(x4,y4,x1,y1,col)
+end
+
+
 -->8
 --trifill
 function trifill(vertices,col)
@@ -238,7 +258,7 @@ end
 --test
 
 function test()
-trifill(test_tri,8)
+	polyfill(64,64,5,10,0,7)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
