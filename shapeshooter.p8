@@ -9,6 +9,12 @@ function _init()
 	gravity=1
 	angle=.25
 	
+	test_tri={40,40,
+											80,40,
+											60,80}
+
+	thisvert=1	
+	
 end
 
 function _draw()
@@ -24,9 +30,50 @@ function _draw()
 		//circfill(thing.x,thing.y,thing.z,thing.col)
 		sqrfill(x,y,z,r,col)
 	end
+	
+
+end
+function _update()
+	//update_shoot()
+	update_test()
 end
 
-function _update()
+function update_test()
+	local i_x
+	local i_y
+	
+	
+	if thisvert==1 then
+		i_x=1
+		i_y=2
+	elseif thisvert==2 then
+		i_x=3
+		i_y=4
+	else
+		i_x=5
+		i_y=6
+	end
+
+	if btnp(❎) then
+		thisvert=(thisvert+1)%3+1
+	end
+	if btn(⬆️) then 
+		test_tri[i_y]-=1
+	end
+	if btn(⬇️) then
+		test_tri[i_y]+=1
+	end
+	if btn(⬅️) then
+		test_tri[i_x]-=1
+	end
+	if btn(➡️) then
+		test_tri[i_x]+=1
+	end
+	
+end	
+	
+
+function update_shoot()
 	if btnp(❎) then
 		spawn(1)
 	end
@@ -114,71 +161,84 @@ function sqrfill(x,y,size,r,col)
 	y4=y+size*sin(r3)
 	
 	trifill({x1,y1,x2,y2,x3,y3},col)
-	pset(x2,y2,8)
-	//trifill({x3,y3,x4,y4,x1,y1},col)
-
-end
+ trifill({x3,y3,x4,y4,x1,y1},col)
+end	
 -->8
+--trifill
 function trifill(vertices,col)
-	v_sort(vertices)
+	local tvertices={
+		vertices[1],
+		vertices[2],
+		vertices[3],
+		vertices[4],
+		vertices[5],
+		vertices[6],
+		}
+	
+	v_sort(tvertices)
+	
+	printh(tvertices[1]..' '..tvertices[2]..' '..
+								tvertices[3]..' '..tvertices[4]..' '..
+								tvertices[5]..' '..tvertices[6]
+								)
 
-	local x1=vertices[1]
-	local y1=vertices[2]
-	local x2=vertices[3]
-	local	y2=vertices[4]
-	local x3=vertices[5]
-	local y3=vertices[6]
-	
-	local noleft=false
-	local noright=false
-	local slope_a1
-	local slope_a2
-	local slope_a3
-	
-	if x1==x2 then
-		noleft=true
-	else
-	 slope_a1=(y2-y1)/(x2-x1)
-	end
-	
-	if x3==x1 then
-		noright=true
-	else
-	 slope_a2=(y3-y1)/(x3-x1)
-	end
-	
-	if noleft and noright then
-		line(x1,y1,x2,y2,col)
-		line(x2,y2,x3,y3,col)
+	printh('.'..vertices[1]..' '..vertices[2]..' '..
+								vertices[3]..' '..vertices[4]..' '..
+								vertices[5]..' '..vertices[6]
+								)
 
-	else
-	 slope_a3=(y3-y2)/(x3-x2)
 
-		if not noleft then
-			for i=0,x2-x1 do
-				local py1=y1+i*slope_a1
-				local py2=y1+i*slope_a2
-				line(i+x1,py1,i+x1,py2,col)
-			end
+	local x1=tvertices[1]
+	local y1=tvertices[2]
+	local x2=tvertices[3]
+	local	y2=tvertices[4]
+	local x3=tvertices[5]
+	local y3=tvertices[6]
+	
+	if y2-y1>0 then
+		dx1=(x2-x1)/(y2-y1)
+	else dx1=0 end
+	if y3-y1>0 then
+		dx2=(x3-x1)/(y3-y1)
+	else dx2=0 end
+	if y3-y2>0 then
+		dx3=(x3-x2)/(y3-y2)
+	else dx3=0 end
+
+	if dx1>dx2 then
+		for i=0,y2-y1 do
+			local y=y1+i
+			local xs=x1+dx2*i
+			line(xs,y,x1+dx1*i,y,col)	
 		end
-
-		if not noright then		
-			for i=x2,x3 do
-				local py1=y2+(i-x2)*slope_a3
-				local py2=y1+(i-x1)*slope_a2
-				line(i,py1,i,py2,col)
-			end
+		for i=0,y3-y2 do
+			local y=y2+i
+			local xs=x1+dx2*(y-y1)
+			line(xs,y,x2+dx3*i,y,col)
 		end
-	end	
+	else // dx1<=dx2
+		for i=0,y2-y1 do
+			local y=i+y1
+			local xa=x1+dx1*i
+			local xb=x1+dx2*i
+			line(xa,y,xb,y,col)
+		end
+		for i=0,y3-y2 do
+			local y=i+y2
+			local xa=x2+i*dx3
+			local xb=x1+dx2*(y-y1)
+			line (xa,y,xb,y,col)
+		end
+	end
 end
 
-//sort vertex tables by x
+//sort vertex tables by y
 function v_sort(a)
-	for i=1,#a,2 do
+	for i=2,#a,2 do
 		local j=i
-		while j>1 and a[j-2] > a[j] do
+		while j>2 and a[j-2] > a[j] do
 			a[j],a[j-2] = a[j-2],a[j]
-			a[j+1],a[j-1] = a[j-1],a[j+1]
+			a[j-1],a[j-3] = a[j-3],a[j-1	]
 		end	
 	end
 end
@@ -188,10 +248,8 @@ end
 --test
 
 function test()
-	local tri={30,40,
-												70,20,
-												30,90}
-	trifill(tri)
+
+trifill(test_tri,8)
 	
 end
 __gfx__
