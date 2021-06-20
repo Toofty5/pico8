@@ -19,7 +19,7 @@ end
 
 function _draw()
 	cls()
-	test()
+//	test()
 	
 	for thing in all(things) do
 		local x=thing.x
@@ -34,8 +34,8 @@ function _draw()
 
 end
 function _update()
-	//update_shoot()
-	update_test()
+	update_shoot()
+	//update_test()
 end
 
 function update_test()
@@ -75,7 +75,7 @@ end
 
 function update_shoot()
 	if btnp(❎) then
-		spawn(1)
+		spawn(10)
 	end
 	if btn(⬅️) then
 		angle+=.01
@@ -97,7 +97,7 @@ function update_shoot()
 		thing.dy+=gravity
 		thing.r+=thing.dr
 		thing.age+=1
-		if thing.age>100 then
+		if thing.age>40 then
 			del(things,thing)
 		end
 	end
@@ -177,17 +177,6 @@ function trifill(vertices,col)
 	
 	v_sort(tvertices)
 	
-	printh(tvertices[1]..' '..tvertices[2]..' '..
-								tvertices[3]..' '..tvertices[4]..' '..
-								tvertices[5]..' '..tvertices[6]
-								)
-
-	printh('.'..vertices[1]..' '..vertices[2]..' '..
-								vertices[3]..' '..vertices[4]..' '..
-								vertices[5]..' '..vertices[6]
-								)
-
-
 	local x1=tvertices[1]
 	local y1=tvertices[2]
 	local x2=tvertices[3]
@@ -238,7 +227,8 @@ function v_sort(a)
 		local j=i
 		while j>2 and a[j-2] > a[j] do
 			a[j],a[j-2] = a[j-2],a[j]
-			a[j-1],a[j-3] = a[j-3],a[j-1	]
+			a[j-1],a[j-3] = a[j-3],a[j-1]
+			j-=2
 		end	
 	end
 end
@@ -248,9 +238,7 @@ end
 --test
 
 function test()
-
 trifill(test_tri,8)
-	
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
