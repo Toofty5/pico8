@@ -8,18 +8,16 @@ function _init()
 	spawn_v=10
 	gravity=1
 	angle=.25
-	
-	test_tri={40,40,
-											80,40,
-											60,80}
-
+	sides=5
 	thisvert=1	
 	
 end
 
 function _draw()
 	cls()
-	test()
+//	test()
+	
+	print("sides:"..sides,0,0)
 	
 	for thing in all(things) do
 		local x=thing.x
@@ -28,54 +26,23 @@ function _draw()
 		local r=thing.r
 		local col=thing.col
 		//circfill(thing.x,thing.y,thing.z,thing.col)
-		sqrfill(x,y,z,r,col)
+		//sqrfill(x,y,z,r,col)
+		polyfill(x,y,sides,z,r,col)
 	end
 	
 
 end
+
 function _update()
 	update_shoot()
-	//update_test()
 end
-
-function update_test()
-	local i_x
-	local i_y
-	
-	
-	if thisvert==1 then
-		i_x=1
-		i_y=2
-	elseif thisvert==2 then
-		i_x=3
-		i_y=4
-	else
-		i_x=5
-		i_y=6
-	end
-
-	if btnp(❎) then
-		thisvert=(thisvert+1)%3+1
-	end
-	if btn(⬆️) then 
-		test_tri[i_y]-=1
-	end
-	if btn(⬇️) then
-		test_tri[i_y]+=1
-	end
-	if btn(⬅️) then
-		test_tri[i_x]-=1
-	end
-	if btn(➡️) then
-		test_tri[i_x]+=1
-	end
-	
-end	
-	
 
 function update_shoot()
 	if btnp(❎) then
 		spawn(10)
+	end
+	if btnp(🅾️) then
+		sides+=1
 	end
 	if btn(⬅️) then
 		angle+=.01
