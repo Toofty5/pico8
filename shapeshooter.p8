@@ -26,7 +26,6 @@ function _draw()
 		local r=thing.r
 		local col=thing.col
 		//circfill(thing.x,thing.y,thing.z,thing.col)
-		//sqrfill(x,y,z,r,col)
 		polyfill(x,y,sides,z,r,col)
 	end
 	
@@ -113,23 +112,6 @@ function polyfill(x,y,sides,size,r,col)
 	
 end
 
-function sqrfill(x,y,size,r,col)
-	local r0=r
-	local r1=r+0.25
-	local r2=r+0.5
-	local r3=r+0.75
-	x1=x+size*cos(r0)
-	y1=y+size*sin(r0)
-	x2=x+size*cos(r1)
-	y2=y+size*sin(r1)
-	x3=x+size*cos(r2)
-	y3=y+size*sin(r2)
-	x4=x+size*cos(r3)
-	y4=y+size*sin(r3)
-	
-	trifill({x1,y1,x2,y2,x3,y3},col)
- trifill({x3,y3,x4,y4,x1,y1},col)
-end	
 function sqr(x,y,size,r,col)
 	local r0=r
 	local r1=r+0.25
@@ -153,6 +135,7 @@ end
 -->8
 --trifill
 function trifill(vertices,col)
+	//need to find lua copy fn
 	local tvertices={
 		vertices[1],
 		vertices[2],
