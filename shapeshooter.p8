@@ -11,49 +11,19 @@ function _init()
 	sides=3
 	thisvert=1	
 	max_age=50
-end
-
-function draw_shooter()
-	local x1=spawn_x
-	local y1=spawn_y
-	local x2=x1+spawn_v*cos(angle)
-	local y2=y1+spawn_v*sin(angle)
-	local xl=x1+spawn_v*.5*cos(angle+.375)
-	local yl=y1+spawn_v*.5*sin(angle+.375)
-	local xr=x1+spawn_v*.5*cos(angle-.375)
-	local yr=y1+spawn_v*.5*sin(angle-.375)
 	
-	
-	trifill({x1,y1,x2,y2,xl,yl},8)
-	trifill({x1,y1,x2,y2,xr,yr},2)
-
-
-end
-
-function _draw()
-	cls()
-//	test()
-	
-	print("sides:"..sides,0,0,7)
-
-	print("⬅️➡️ angle",7)
-	print("⬆️⬇️ power",7)
-	print("🅾️ shape",7) 
-	print("❎ shoot",7)
-	
-	
-	for thing in all(things) do
-		local x=thing.x
-		local y=thing.y
-		local z=thing.z
-		local r=thing.r
-		local col=thing.col
-		//circfill(thing.x,thing.y,thing.z,thing.col)
-		polyfill(x,y,sides,z,r,col)
-	end
-	
-	draw_shooter()
-
+	pal_index=1
+	palettes={
+		{"random",{}},
+		{"water",{1,5,6,7,7,12,12,13}},
+		{"fire",{2,7,8,8,9,10,10,14}},
+		{"earth",{2,3,4,5,6,11,13,15}}
+	}
+	menuitem(1,"reset sides",
+		function() sides=3 end)
+		
+	menuitem(2,"palette: "..palettes[pal_index][1],
+		function() pal_switch() end)
 end
 
 function _update()
@@ -99,9 +69,6 @@ function update_shoot()
 	end
 end
 
-water={1,6,7,12}
-fire={2,8,9,10,7}
-
 function spawn(num)
 	for i=0,num do
 	
@@ -124,7 +91,6 @@ function spawn(num)
 	sfx(0)
 end
 
-
 function polyfill(x,y,sides,size,r,col)
 	local rot={} //vertex rotations
 	for i=0,sides do
@@ -140,28 +106,51 @@ function polyfill(x,y,sides,size,r,col)
 
 		trifill({x,y,x1,y1,x2,y2},col)
 	end
+end
+
+function pal_switch()
+	pal_index=(pal_index+1)%3
+	return true
+end
+-->8
+--draw stuff
+function _draw()
+	cls()
+//	test()
 	
+	print("sides:"..sides,0,0,7)
+
+	print("⬅️➡️ angle",7)
+	print("⬆️⬇️ power",7)
+	print("🅾️ shape",7) 
+	print("❎ shoot",7)
+	
+	
+	for thing in all(things) do
+		local x=thing.x
+		local y=thing.y
+		local z=thing.z
+		local r=thing.r
+		local col=thing.col
+		//circfill(thing.x,thing.y,thing.z,thing.col)
+		polyfill(x,y,sides,z,r,col)
+	end
+	draw_shooter()
 end
 
-function sqr(x,y,size,r,col)
-	local r0=r
-	local r1=r+0.25
-	local r2=r+0.5
-	local r3=r+0.75
-	x1=x+size*cos(r0)
-	y1=y+size*sin(r0)
-	x2=x+size*cos(r1)
-	y2=y+size*sin(r1)
-	x3=x+size*cos(r2)
-	y3=y+size*sin(r2)
-	x4=x+size*cos(r3)
-	y4=y+size*sin(r3)
-	line(x1,y1,x2,y2,col)
-	line(x2,y2,x3,y3,col)
-	line(x3,y3,x4,y4,col)
-	line(x4,y4,x1,y1,col)
+function draw_shooter()
+	local x1=spawn_x
+	local y1=spawn_y
+	local x2=x1+spawn_v*cos(angle)
+	local y2=y1+spawn_v*sin(angle)
+	local xl=x1+spawn_v*.5*cos(angle+.375)
+	local yl=y1+spawn_v*.5*sin(angle+.375)
+	local xr=x1+spawn_v*.5*cos(angle-.375)
+	local yr=y1+spawn_v*.5*sin(angle-.375)
+		
+	trifill({x1,y1,x2,y2,xl,yl},8)
+	trifill({x1,y1,x2,y2,xr,yr},2)
 end
-
 
 -->8
 --trifill
@@ -373,5 +362,5 @@ __label__
 00000000000000000000000000000000000000000000000000000000000000007777777777777777777777770000000000000000000000000000000000000000
 
 __sfx__
-00010000000000205002050050500b2501d050170500c0500c0500a05009050080500705006050060500055001050010500055001050010500105000550010500105001050010500055000050000500055000050
+00010000000000205002050050500b2501d050170500c0500c0500a05009050080500705006050060500055001050010500055001050010500105000550010500105001050010000050000000000000050000000
 00010000070501c350203501c35004300013000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
